@@ -30,7 +30,7 @@ run:
 push:
 	git add .
 	git commit -m "Update"
-	git push
+	git push origin master	#얘는 로컬저장소를 원격저장소랑 연결한거여서 이렇게
 
 help:
 	@echo "make all"
