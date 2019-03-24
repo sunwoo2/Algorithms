@@ -1,3 +1,2 @@
 # Algorithms
-
-* Use `C`
+* Use C
