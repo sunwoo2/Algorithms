@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+  
 #define PossibleMaxDistance 140
 
 void min_time(int Max, int n, int d[], int t[], int T[], int P[]){
