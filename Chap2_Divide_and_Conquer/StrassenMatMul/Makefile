@@ -11,7 +11,7 @@ $(TARGET): $(OBJS)
 		 $(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -rf $(TARGET) $(OBJS)
+	rm -rf $(TARGET) $(OBJS) $(OBJS:.o=.s)
 
 run:
 	./$(TARGET)
