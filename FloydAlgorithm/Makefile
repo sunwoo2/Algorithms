@@ -1,6 +1,6 @@
 .SUFFIXES: .c .o
 
-OBJS = test.o
+OBJS = floyd.o
 TARGET = $(OBJS:.o=)
 CC = gcc
 CCFLAGS = -W -Wall -O2
