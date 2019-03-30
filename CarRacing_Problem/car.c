@@ -2,42 +2,47 @@
 
 #define PossibleMaxDistance 140
 
-int min_time(int n, int node_time[], int last, int node_distance[]){
-	if(n==1)
-		return 5;
+void min_time(int Max, int n, int d[], int t[], int T[], int P[]){
+	int min;
+	int distance;
+	int previous_shop;
 
-	int min = min_time(n-1, node_time, last-1, node_distance) + node_time[last-1];
-	int distance = node_distance[last-1];
-	int current = 0;
+	for(int current_shop=1; current_shop<=n+1; current_shop++){
+		// set initial value in this loop
+		previous_shop = current_shop-1;
+		min = T[previous_shop]+t[current_shop];
+		P[current_shop] = previous_shop;
 
-	for(int i=2; i<=n ; i++){
-		distance += node_distance[last-i];	
-		if(distance >= PossibleMaxDistance){
-			return min;
+		// Checcurrent_shop other cases
+		distance = d[current_shop] + d[previous_shop];
+		for(int i=1; distance<=Max && (previous_shop-i)>=0; i++){
+			if( (T[previous_shop-i]+t[current_shop]) < min ){
+				min = T[previous_shop-i]+t[current_shop];
+				P[current_shop] = previous_shop-i;
+			}
+			distance += d[previous_shop-i];
 		}
-		else{
-			current = min_time(n-i, node_time, last-i, node_distance) + node_time[last-i];
-			if(current < min)
-				min = current;
-		}
+
+		T[current_shop] = min;	
 	}
 
-	return min;
 };
 
-void test(int a[]){
-	for(int i=0; i<3; i++)
-		printf("%d\n", a[2+i]);
-}
+int main(){								// Initial Condition
+	int t[7] = {0,5,10,4,11,7,0};		// t[0]=t[n+1]=0
+	int d[7] = {0,100,30,100,40,50,60};	// d[0]=0
+	int T[7] = {0,0,0,0,0,0,0}; 		// T[0]=0
+	int P[7] = {-1,0,0,0,0,0,0};		// P[0]=-1
 
-int main(){
-	int node_time[7] = {0,5,10,4,11,7,0};
-	int node_distance[6] = {100,30,100,40,50,60};
-	int MinTime = 0;
+	min_time(140, 6, d, t, T, P);
 
-	MinTime = min_time(2, node_time, 2, node_distance);
-
-	printf("최소 총 정비시간: %d\n", MinTime);
+	printf("%2d %2d %2d %2d %2d %2d %2d\n", 0,1,2,3,4,5,6);
+	for(int i=0; i<7; i++)
+		printf("%2d ", T[i]);
+	printf("\n");
+	for(int i=0; i<7; i++)
+		printf("%2d ", P[i]);
+	printf("\n");
 
 //	test(node_time);	
 
