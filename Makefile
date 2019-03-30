@@ -26,7 +26,7 @@ run:
 
 push:
 	git add .
-	git commit -m "Update"
+	git commit -m "-"
 	git push origin master	
 
 help:
