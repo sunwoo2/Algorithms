@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
-int EE[6][6][2];    
-int PP[6][6][2];    // streetlamp : 1~6
-int W[6] = {2,10,18,19,15,19};
-int D[6] = {3,11,12,13,15,17};
+#define N 6
+
+int EE[N][N][2];    
+int PP[N][N][2];    
+int W[N] = {2,10,18,19,15,19};
+//int W[N] = {2,10,18,99,15,59};    // TEST
+int D[N] = {3,11,12,13,15,17};
 
 int min(int n, int i, int j, int f){
     int W_off = 0;
@@ -19,17 +22,17 @@ int min(int n, int i, int j, int f){
         E11 = EE[i+1][j][0] + (D[i+1]-D[i])*(WT-W_off); 
         E12 = EE[i+1][j][1] + (D[j]-D[i])*(WT-W_off); 
         if(EE[i+1][j][0] == -1){
-            PP[i][j][0] = j+1; 
+            PP[i][j][0] = j; 
             return E12;
         }else if(EE[i+1][j][1] == -1){
-            PP[i][j][0] = i+1+1; 
+            PP[i][j][0] = i+1; 
             return E11;
         }else
             if(E11<E12){
-                PP[i][j][0] = i+1+1; 
+                PP[i][j][0] = i+1; 
                 return E11;
             }else{
-                PP[i][j][0] = j+1; 
+                PP[i][j][0] = j; 
                 return E12;
             }
     }else{
@@ -38,17 +41,17 @@ int min(int n, int i, int j, int f){
         E21 = EE[i][j-1][0] + (D[j]-D[i])*(WT-W_off);
         E22 = EE[i][j-1][1] + (D[j]-D[j-1])*(WT-W_off);
         if(EE[i][j-1][0] == -1){
-            PP[i][j][1] = j-1+1; 
+            PP[i][j][1] = j-1; 
             return E22;
         }else if(EE[i][j-1][1] == -1){
-            PP[i][j][1] = i+1; 
+            PP[i][j][1] = i; 
             return E21;
         }else
             if(E21<E22){
-                PP[i][j][1] = i+1; 
+                PP[i][j][1] = i; 
                 return E21;
             }else{
-                PP[i][j][1] = j-1+1; 
+                PP[i][j][1] = j-1; 
                 return E22;
             }
     }
@@ -84,49 +87,63 @@ void streetlamp(int n, int m){
     }
 }
 
-void print_path(int i, int j){
-    int pre_lamp;
-    if(EE[i][j][0] < EE[i][j][1])
-        pre_lamp = PP[i][j][0];
-    else
-        pre_lamp = PP[i][j][1];
-    
-    if(pre_lamp > 0){
-        printf("%d ", pre_lamp);
-        //print_path  ////////////////
+void print_path(int i, int j, int f){
+    int pre_lamp = PP[i][j][f];
+    if(pre_lamp != -1){
+        if(f==0){
+            if(pre_lamp == i+1){
+                print_path(i+1, j, 0);
+                printf("%2d", pre_lamp);
+            }else{
+                print_path(i+1, j, 1);
+                printf("%2d", pre_lamp);
+            }
+        }else{
+            if(pre_lamp == i){
+                print_path(i, j-1, 0);
+                printf("%2d", pre_lamp);
+            }else{
+                print_path(i, j-1, 1);
+                printf("%2d", pre_lamp);
+            }
+        }
     }
 }
 
 int main(){
     memset(EE, '\0', sizeof(EE));
-    memset(PP, '\0', sizeof(PP));
+    memset(PP, -1, sizeof(PP));
 
-    streetlamp(6,5);
+    streetlamp(N,5);
 
-    for(int i=0; i<6; i++){
-        for(int j=0; j<6; j++)
-            printf("%5d", EE[i][j][0]);
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++)
+            printf("%4d", EE[i][j][0]);
         printf("\n");
     }
     printf("\n");
-    for(int i=0; i<6; i++){
-        for(int j=0; j<6; j++)
-            printf("%5d", EE[i][j][1]);
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++)
+            printf("%4d", EE[i][j][1]);
         printf("\n");
     }
     printf("\n");
 
-    for(int i=0; i<6; i++){
-        for(int j=0; j<6; j++)
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++)
             printf("%4d", PP[i][j][0]);
         printf("\n");
     }
     printf("\n");
-    for(int i=0; i<6; i++){
-        for(int j=0; j<6; j++)
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++)
             printf("%4d", PP[i][j][1]);
         printf("\n");
     }
+    printf("\n");
+
+    //print_path(0,N-1,0);    // TEST
+    print_path(0,N-1,1);
     printf("\n");
 
     return 0;
