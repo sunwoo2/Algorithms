@@ -2,7 +2,7 @@
 #include <string.h>
 
 int EE[6][6][2];    
-int PP[6][6][2];    // streetlamp : 0~5
+int PP[6][6][2];    // streetlamp : 1~6
 int W[6] = {2,10,18,19,15,19};
 int D[6] = {3,11,12,13,15,17};
 
@@ -19,17 +19,17 @@ int min(int n, int i, int j, int f){
         E11 = EE[i+1][j][0] + (D[i+1]-D[i])*(WT-W_off); 
         E12 = EE[i+1][j][1] + (D[j]-D[i])*(WT-W_off); 
         if(EE[i+1][j][0] == -1){
-            PP[i][j][0] = j; 
+            PP[i][j][0] = j+1; 
             return E12;
         }else if(EE[i+1][j][1] == -1){
-            PP[i][j][0] = i+1; 
+            PP[i][j][0] = i+1+1; 
             return E11;
         }else
             if(E11<E12){
-                PP[i][j][0] = i+1; 
+                PP[i][j][0] = i+1+1; 
                 return E11;
             }else{
-                PP[i][j][0] = j; 
+                PP[i][j][0] = j+1; 
                 return E12;
             }
     }else{
@@ -38,17 +38,17 @@ int min(int n, int i, int j, int f){
         E21 = EE[i][j-1][0] + (D[j]-D[i])*(WT-W_off);
         E22 = EE[i][j-1][1] + (D[j]-D[j-1])*(WT-W_off);
         if(EE[i][j-1][0] == -1){
-            PP[i][j][1] = j-1; 
+            PP[i][j][1] = j-1+1; 
             return E22;
         }else if(EE[i][j-1][1] == -1){
-            PP[i][j][1] = i; 
+            PP[i][j][1] = i+1; 
             return E21;
         }else
             if(E21<E22){
-                PP[i][j][1] = i; 
+                PP[i][j][1] = i+1; 
                 return E21;
             }else{
-                PP[i][j][1] = j-1; 
+                PP[i][j][1] = j-1+1; 
                 return E22;
             }
     }
@@ -84,6 +84,19 @@ void streetlamp(int n, int m){
     }
 }
 
+void print_path(int i, int j){
+    int pre_lamp;
+    if(EE[i][j][0] < EE[i][j][1])
+        pre_lamp = PP[i][j][0];
+    else
+        pre_lamp = PP[i][j][1];
+    
+    if(pre_lamp > 0){
+        printf("%d ", pre_lamp);
+        //print_path  ////////////////
+    }
+}
+
 int main(){
     memset(EE, '\0', sizeof(EE));
     memset(PP, '\0', sizeof(PP));
@@ -102,7 +115,7 @@ int main(){
         printf("\n");
     }
     printf("\n");
-/*
+
     for(int i=0; i<6; i++){
         for(int j=0; j<6; j++)
             printf("%4d", PP[i][j][0]);
@@ -115,6 +128,6 @@ int main(){
         printf("\n");
     }
     printf("\n");
-*/
+
     return 0;
 }
