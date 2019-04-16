@@ -14,6 +14,19 @@ void tsp(int n){
 
     for(int k=1; k<n-1; k++)
         for(    // Continue @@@@@@@@@
+
+        k=0, 000
+        k=1, 001
+             010
+             100
+        k=2, 011
+             101
+             110
+        k=3, 111
+
+
+
+                
 }
 
 int main(){

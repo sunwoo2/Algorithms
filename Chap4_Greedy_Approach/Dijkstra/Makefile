@@ -1,17 +1,13 @@
-.SUFFIXES: .c .o
 
-OBJS = car.o car_dijkstra.o
-TARGET = $(OBJS:.o=)
 CC = gcc
 CCFLAGS = -W -Wall -O2
+OBJS = dijkstra.o
+TARGET = $(OBJS:.o=)
 
 print-%: ; @echo $*=$($*)
 
-all: $(TARGET)
-
 $(TARGET): $(OBJS)
-	$(CC) $(CCFLAGS) -o car car.o
-	$(CC) $(CCFLAGS) -o car_dijkstra car_dijkstra.o
+	$(CC) $(CCFLAGS) -o $@ $^
 
 assem: $(OBJS:.o=.c)
 	@echo "Compiling Assembly"
@@ -24,6 +20,9 @@ clean:
 run:
 	@echo "Executing"
 	./$(TARGET)
+
+.c.o:
+	$(CC) $(CCFLAGS) -c $<
 
 help:
 	@echo "make all"
