@@ -2,7 +2,7 @@
 
 #define VERTEX 5
 #define NONE 100
-
+  
 int W[VERTEX][VERTEX] = { {NONE,7,4,6,1}, 
                           {NONE,NONE,NONE,NONE,NONE}, 
                           {NONE,2,NONE,5,NONE},
