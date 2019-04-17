@@ -35,13 +35,12 @@ void dijkstra(int n){
             }
 
         // Compare & Update
-        for(int i=1; i<n; i++){
+        for(int i=1; i<n; i++)
             if( length[near]+W[near][i] < length[i] ){
                 length[i] = length[near] + W[near][i];
                 touch[i] = near;
             }
-            length[near] = -1;
-        }
+        length[near] = -1;
     }
 }
 

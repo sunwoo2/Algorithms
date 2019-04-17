@@ -1,4 +1,3 @@
-.SUFFIXES: .c .o
 
 OBJS = car.o car_dijkstra.o
 TARGET = $(OBJS:.o=)
@@ -23,7 +22,14 @@ clean:
 
 run:
 	@echo "Executing"
-	./$(TARGET)
+	./car
+
+run1:
+	@echo "Executing"
+	./car_dijkstra
+
+.c.o:
+	$(CC) $(CCFLAGS) -c $<
 
 help:
 	@echo "make all"

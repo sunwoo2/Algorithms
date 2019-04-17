@@ -3,13 +3,13 @@
 #define VERTEX 7
 #define NONE 100
 
-int W[VERTEX][VERTEX] = { {200,5,10,200,200,200,200}, 
-                          {200,200,10,4,200,200,200}, 
-                          {200,200,200,4,11,200,200},
-                          {200,200,200,200,11,7,200},
-                          {200,200,200,200,200,7,7}, 
-                          {200,200,200,200,200,200,0},
-                          {200,200,200,200,200,200,200} };
+int W[VERTEX][VERTEX] = { {NONE,5,10,NONE,NONE,NONE,NONE}, 
+                          {NONE,NONE,10,4,NONE,NONE,NONE}, 
+                          {NONE,NONE,NONE,4,11,NONE,NONE},
+                          {NONE,NONE,NONE,NONE,11,7,NONE},
+                          {NONE,NONE,NONE,NONE,NONE,7,7}, 
+                          {NONE,NONE,NONE,NONE,NONE,NONE,0},
+                          {NONE,NONE,NONE,NONE,NONE,NONE,NONE} };
 int touch[VERTEX];
 int length[VERTEX];
 
@@ -20,15 +20,13 @@ void dijkstra(int n){
     // Initialize touch and length
     for(int i=1; i<n; i++){
         touch[i] = 0;
-        length[i] = NONE;
+        length[i] = W[0][i];
     }
     touch[0] = -2;
     length[0] = -2;
-    length[1] = 5;
-    length[2] = 10;
 
     // Repeat VERTEX-1 times
-    for(int k=0; k<1; k++){
+    for(int k=0; k<n-1; k++){
 
         // Choose locally optimal choice
         min = NONE;
@@ -37,32 +35,14 @@ void dijkstra(int n){
                 min = length[i];
                 near = i;
             }
-//        printf("Choose locally optimal choice: %d\n", near);
-//    for(int j=0; j<VERTEX; j++)
-//        printf("%4d", length[j]);
-//        printf("\n");
 
-//        printf("length[1]: %d\n", length[1]);   // 아니 여기서는 5 맞는데
         // Compare & Update
-        for(int i=1; i<3; i++){
-            if( (length[near]+W[near][i]) < length[i] ){
-//        printf("length[1]: %d\n", length[1]);   // if문 안에 저거 하고나면 왜 -1이 되냐고!!?
-//                printf("%d + %d < %d\n", length[near],W[near][i],length[i]);
+        for(int i=1; i<n; i++)
+            if( (length[near]+W[near][i] < length[i]) ){
                 length[i] = length[near] + W[near][i];
                 touch[i] = near;
-//    for(int j=0; j<VERTEX; j++)
-//        printf("%4d", length[j]);
-//        printf("\n");
-
-//                printf("length[%d]: %d\n", i, length[i]);
-//                printf("touch[%d]: %d\n", i, touch[i]);
-
             }
-            length[near] = -1;
-        }
-//    for(int j=0; j<VERTEX; j++)
-//        printf("%4d", length[j]);
-//        printf("\n");
+        length[near] = -1;
     }
 }
 
@@ -74,14 +54,13 @@ int main(){
         printf("\n");
     }
 
-
     dijkstra(VERTEX);
 
     for(int j=0; j<VERTEX; j++)
-        printf("%2d", touch[j]); 
+        printf("%4d", touch[j]); 
     printf("\n");
     for(int j=0; j<VERTEX; j++)
-        printf("%2d", length[j]);
+        printf("%4d", length[j]);
     printf("\n");
 
     return 0;
