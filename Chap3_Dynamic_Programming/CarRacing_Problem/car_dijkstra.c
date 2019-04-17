@@ -3,6 +3,7 @@
 #define VERTEX 7
 #define NONE 100
 
+// the edge of the weighted digraph is the time about each shop
 int W[VERTEX][VERTEX] = { {NONE,5,10,NONE,NONE,NONE,NONE}, 
                           {NONE,NONE,10,4,NONE,NONE,NONE}, 
                           {NONE,NONE,NONE,4,11,NONE,NONE},
