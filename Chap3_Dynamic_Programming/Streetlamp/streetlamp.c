@@ -6,7 +6,7 @@
 int EE[N][N][2];    
 int PP[N][N][2];    
 int W[N] = {2,10,18,19,15,19};
-//int W[N] = {2,10,18,99,15,59};    // TEST
+//int W[N] = {52,10,18,99,15,9};    // TEST
 int D[N] = {3,11,12,13,15,17};
 
 int min(int n, int i, int j, int f){
@@ -88,23 +88,24 @@ void streetlamp(int n, int m){
 }
 
 void print_path(int i, int j, int f){
+    // 가로등 1~N으로 나타내기위해 출력할때 +1  
     int pre_lamp = PP[i][j][f];
     if(pre_lamp != -1){
         if(f==0){
             if(pre_lamp == i+1){
                 print_path(i+1, j, 0);
-                printf("%2d", pre_lamp);
+                printf("%2d", pre_lamp+1);
             }else{
                 print_path(i+1, j, 1);
-                printf("%2d", pre_lamp);
+                printf("%2d", pre_lamp+1);
             }
         }else{
             if(pre_lamp == i){
                 print_path(i, j-1, 0);
-                printf("%2d", pre_lamp);
+                printf("%2d", pre_lamp+1);
             }else{
                 print_path(i, j-1, 1);
-                printf("%2d", pre_lamp);
+                printf("%2d", pre_lamp+1);
             }
         }
     }
@@ -142,9 +143,13 @@ int main(){
     }
     printf("\n");
 
-    //print_path(0,N-1,0);    // TEST
-    print_path(0,N-1,1);
-    printf("\n");
+    if(EE[0][N-1][0] < EE[0][N-1][1]){
+        print_path(0,N-1,0);
+        printf("%2d\n", 1);
+    }else{
+        print_path(0,N-1,1);
+        printf("%2d\n", N);
+    }
 
     return 0;
 }
