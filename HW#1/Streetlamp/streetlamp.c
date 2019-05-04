@@ -79,40 +79,49 @@ void streetlamp(int EE[], int PP[], int W[], int D[], int n, int m){
     }
 }
 
-void print_path(int PP[], int n, int i, int j, int f){
+void print_path(FILE *output, int PP[], int n, int i, int j, int f){
     // 가로등을 1~N으로 표현하기위해 출력할때 +1
+
     int pre_lamp = PP[f*n*n+i*n+j];
     if(pre_lamp != -1){
         if(f==0){
             if(pre_lamp == i+1){
-                print_path(PP,n,i+1, j, 0);
+                print_path(output,PP,n,i+1, j, 0);
                 printf("%d\n", pre_lamp+1);
+                fprintf(output, "%d\n", pre_lamp+1);
             }else{
-                print_path(PP,n,i+1, j, 1);
+                print_path(output,PP,n,i+1, j, 1);
                 printf("%d\n", pre_lamp+1);
+                fprintf(output, "%d\n", pre_lamp+1);
             }
         }else{
             if(pre_lamp == i){
-                print_path(PP,n,i, j-1, 0);
+                print_path(output,PP,n,i, j-1, 0);
                 printf("%d\n", pre_lamp+1);
+                fprintf(output, "%d\n", pre_lamp+1);
             }else{
-                print_path(PP,n,i, j-1, 1);
+                print_path(output,PP,n,i, j-1, 1);
                 printf("%d\n", pre_lamp+1);
+                fprintf(output, "%d\n", pre_lamp+1);
             }
         }
     }
 }
 
-void print_result(int EE[], int PP[], int N){
+void print_result(FILE *output, int EE[], int PP[], int N){
 
     if(EE[0*N*N+0*N+(N-1)] < EE[1*N*N+0*N+(N-1)]){
         printf("%d\n", EE[0*N*N+0*N+(N-1)]);
-        print_path(PP,N,0,N-1,0);
+        fprintf(output, "%d\n", EE[0*N*N+0*N+(N-1)]);
+        print_path(output,PP,N,0,N-1,0);
         printf("%d\n", 1);
+        fprintf(output, "%d\n", 1);
     }else{
         printf("%d\n", EE[1*N*N+0*N+(N-1)]);
-        print_path(PP,N,0,N-1,1);
+        fprintf(output, "%d\n", EE[1*N*N+0*N+(N-1)]);
+        print_path(output,PP,N,0,N-1,1);
         printf("%d\n", N);
+        fprintf(output, "%d\n", N);
     }
 
 }
@@ -123,8 +132,9 @@ int main(){
     printf("input file name? ");
     scanf("%s", input);
 
-    FILE *fd;
+    FILE *fd, *output;
     fd = fopen(input, "r");
+    output = fopen("output.txt", "a");
 
     // Read Data
     int N;
@@ -147,10 +157,11 @@ int main(){
 
     streetlamp(EE,PP,W,D,N,5);
 
-    print_result(EE,PP,N);
+    print_result(output,EE,PP,N);
 
 
     fclose(fd);
+    fclose(output);
 
     return 0;
 }
