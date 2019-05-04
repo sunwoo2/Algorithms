@@ -18,7 +18,7 @@ assem: $(OBJS:.o=.c)
 
 clean:
 	@echo "Deleting"
-	rm -rf $(TARGET) $(OBJS) $(OBJS:.o=.s)
+	rm -rf $(TARGET) $(OBJS) $(OBJS:.o=.s) output.txt
 
 run:
 	@echo "Executing"

@@ -2,7 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <math.h>
+
+#define INF 99999
 
 enum direction {U,D,L,R};
 
@@ -17,7 +18,7 @@ void maze(int W[], int l[], int l1[], int t[], int N){
 
     // L.O.C
     for(int k=0; k<N*N-1; k++){
-        min = INFINITY;
+        min = INF;
         for(int i=0; i<N; i++){
             for(int j=0; j<N; j++){
                 if(0<=l[i*N+j] && l[i*N+j]<min){
@@ -93,7 +94,7 @@ int main(){
 
     FILE *fd, *output;
     fd = fopen(input, "r");
-    output = fopen("output.txt", "a");
+    output = fopen("output.txt", "w");
 
     // Read Data
     int N;
@@ -114,10 +115,10 @@ int main(){
     memset(t, -1, sizeof(t));
     for(int i=0; i<N; i++)
         for(int j=0; j<N; j++)
-            l[i*N+j] = INFINITY;
+            l[i*N+j] = INF;
     for(int i=0; i<N; i++)
         for(int j=0; j<N; j++)
-            l1[i*N+j] = INFINITY;
+            l1[i*N+j] = INF;
 
 
     // Algorithm

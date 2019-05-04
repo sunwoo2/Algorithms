@@ -134,7 +134,7 @@ int main(){
 
     FILE *fd, *output;
     fd = fopen(input, "r");
-    output = fopen("output.txt", "a");
+    output = fopen("output.txt", "w");
 
     // Read Data
     int N;
