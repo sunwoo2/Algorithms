@@ -26,7 +26,7 @@ void queens(int i, int n){
     if(promising(i)){
         if(i==n){   // Finish locating N-Queens
             for(int k=0; k<=n; k++)
-                printf("%3d", col[k]);
+                printf("%d\n", col[k]);
             printf("\n");
             exit(0);   // Need to Exit
         }else{

@@ -24,6 +24,8 @@ bool promising(int i, int profit, int weight){
             bound = bound + p[j];
             j++;
         }
+        if(j==N)    // 마지막 물건을 넣을 수 있을때!!!
+            j--;
         if(j<N){
             bound += (W-totalweight)*(p[j]/w[j]);   // Upper bound (solution of f.k.s)
             if(bound>maxprofit)
