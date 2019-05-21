@@ -34,11 +34,8 @@ void knapsack(int p[],int w[], int include[], int bestset[], int* maxprofit, int
         //printf("i=%d\n",i);
     if( weight<=W && profit>=(*maxprofit) ){
         *maxprofit = profit;
-        for(int i=0; i<N; i++){
+        for(int i=0; i<N; i++)
             bestset[i] = include[i];    // Copy by value! Not pointer!
-            //printf("%3d", bestset[i]);
-        }
-        //printf("\n");
     }
 
     if(promising(p,w,maxprofit,N,W,i,profit,weight)){
@@ -89,10 +86,10 @@ int main(){
     }
 
 
-    free(p);
-    free(w);
-    free(include);
-    free(bestset);
+    //free(p);      // input2.txt run할때 "free(): invalid pointer" error뜸. 다른 input.txt에서는 error 발생 안함 
+    //free(w);
+    //free(include);
+    //free(bestset);
     fclose(input);
     fclose(output);
 
