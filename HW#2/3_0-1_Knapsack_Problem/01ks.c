@@ -3,14 +3,17 @@
 #include <stdbool.h>
 #include <string.h>
 
+// For VS
+#pragma warning(disable: 4996)
+#pragma warning(disable: 4819)
+
 bool promising(int p[], int w[], int* maxprofit, int N, int W, int i, int profit, int weight){
     
     if(weight>=W)
         return false;
     else{
         int j = i+1;
-        int bound = profit;
-        int totalweight = weight;
+        int bound = profit; int totalweight = weight;
         while( (j<N) && (totalweight+w[j]<=W) ){
             totalweight = totalweight + w[j];
             bound = bound + p[j];

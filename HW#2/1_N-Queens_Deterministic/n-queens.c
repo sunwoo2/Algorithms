@@ -3,6 +3,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+// For VS
+#pragma warning(disable: 4996)  // scanf, fsacnf
+#pragma warning(disable: 4819)  // 한글주석 
+
 bool promising(int col[], int i){
     int k=0;
     bool promising = true;
