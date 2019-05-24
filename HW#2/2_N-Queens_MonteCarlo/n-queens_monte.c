@@ -27,13 +27,9 @@ int estimate_n_queens(int col[], int n){   // 여기서 n은 N
     int m = 1;
     int i = 0;
     int k = 0;
-    int mprod = 1;
-    long  numnodes = 1;
-    int promising_children[n];
+	int* promising_children = (int*)calloc(n, sizeof(int));
 
     while((m!=0) && (i!=n)){
-        mprod = mprod*m;
-        numnodes = numnodes + mprod*n;
         m=0;
         k=0;
         memset(promising_children, 0, sizeof(int)*n);
@@ -52,6 +48,7 @@ int estimate_n_queens(int col[], int n){   // 여기서 n은 N
             col[i] = 0;
     }
 
+    free(promising_children);
     return i;  
 }
 
