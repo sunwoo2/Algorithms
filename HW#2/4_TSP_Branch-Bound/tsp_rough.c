@@ -8,7 +8,6 @@
 #pragma warning(disable: 4819)  // 한글주석 
 
 #define Inf 9000
-// input_*.txt test할려면 90000000으로 바꾸고 돌리자
 
 typedef struct{
     int level;
@@ -32,8 +31,7 @@ void removekeys(HEAP* H, int n);      // Sorting. O(nlogn). In-place
 void heapsort(HEAP* H, int n);        // O(nlogn). In-place
 void insert(HEAP* H, int n, NODE* node); // data = node.bound
 
-int length(int W[], int n, NODE* node1){    
-    // 모든경로 찾았을때 니깐 마지막에 1로 가는 엣지 까지 더해준다!
+int length(int W[], int n, NODE* node1){    // 모든경로 찾았을때 니깐 마지막에 1로 가는 엣지 까지 더해준다!
     NODE node = *node1;   
     int length = 0;
     int i;
@@ -48,16 +46,25 @@ int length(int W[], int n, NODE* node1){
 }
 
 int bound(int W[], int n, NODE* node1){
+    //printf("---bound function test---\n");
     NODE node = *node1;     // node.path 값 읽기 위해(node1을 포인터로 받음)
+    //int* w = W;     // 이렇게 pointer 가르키면 W[] 값 바뀜!!!!!!!!!
     int* w = (int*)malloc(n*n*sizeof(int));     // 배열값 copy 하기 위해
-    if(!w){
-        perror("bound function에서 w복사 malloc 실패!");
-        exit(1);
-    }
     memcpy(w, W, sizeof(int)*n*n);
     int bound=0;
     int min;
     int i,j;
+    /*
+        for(int j=0; j<n; j++)
+            printf("%d ", node.path[j]);
+        printf("\n");
+        
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++)
+            printf("%3d", w[i*n+j]);
+        printf("\n");
+    }
+    */
     
     // Set Matrix by path and bound
     for(int k=0; k<(node.index-1); k++){
@@ -81,30 +88,18 @@ int bound(int W[], int n, NODE* node1){
             bound += min;
     }
 
+    //printf("------------------\n");
     free(w);
     return bound;
 }
 
 void travel2(int W[], int n, int opttour[], int* minlength){
-    // Set heap-maxsize = n^5, after try to realloc
     int leaves = 1;
-    for(int i=0; i<5; i++)  
-            leaves *= n;
+    for(int i=1; i<n; i++)  // (n-1)! leaves
+            leaves *= i;
     HEAP* heap = create_heap(leaves);
-    if(!heap){
-        perror("Creating heap Fail!");
-        exit(1);
-    }
     NODE* u = create_node(n);
-    if(!u){
-        perror("Creating node u Fail!");
-        exit(1);
-    }
     NODE* v = create_node(n);
-    if(!v){
-        perror("Creating node v Fail!");
-        exit(1);
-    }
     v->level = 0;
     v->path[0] = 1;
     v->index = 1;
@@ -113,9 +108,21 @@ void travel2(int W[], int n, int opttour[], int* minlength){
 
     while(heap->heapsize > 0){
         *v = root(heap);
+        printf("remove's bound = %d\n", v->bound);
+        printf("v->level = %d, v->index = %d\n", v->level, v->index);
+        printf("v->path[ ");
+        for(int m=0; m<v->index; m++)
+            printf("%d ", v->path[m]);
+        printf("]\n");
+        printf("v->bound = %d, minlength = %d\n", v->bound, *minlength);
         if(v->bound < *minlength){
+            //u.bound= v.bound;
+        printf("v->level = %d\n", v->level);
+        //printf("u.bound = %d\n", u.bound);
             if(v->level==n-2){
                 int tmp=0;
+                //u->index = v->index;
+                //memcpy(u->path, v->path, sizeof(int)*n);   
                 for(int i=1; i<=n; i++)     // add last one node
                     tmp += i;
                 v->path[n-1] = tmp;
@@ -125,35 +132,78 @@ void travel2(int W[], int n, int opttour[], int* minlength){
                 v->path[n-1] -= tmp;
                 v->index++;
                 tmp = length(W,n,v);
+                printf("마지막 vertex 추가하고 난후\n");
+        printf("v->path[ ");
+        for(int m=0; m<v->index; m++)
+            printf("%d ", v->path[m]);
+        printf("]\n");
+                printf("@@@@@minlength = %d\n", tmp);
                 if(tmp < *minlength){
                     *minlength = tmp;
                     memcpy(opttour, v->path, sizeof(int)*n);
                 }
             }else{
                 for(int i=2; i<=n; i++){
+                    
+                    //int k=0;
+                    //while( (i!=v.path[k]) && (k<u.index) )
+                    //    k++;
+                    //if(k==u.index){
+                    //    u.path[u.index++] = i;    
+                    //    u.bound = bound(W,n,&u);
+                    //    if(u.bound < *minlength)
+                    //        insert(heap, u);
+                    //}
+                    
+                    // path에 없는 vertex 찾기
                     int exist = 0;
                     for(int k=1; k<v->index; k++)
-                        if(i==v->path[k])
+                        if(i==v->path[k]){
+                            printf("path에 없는 vertex = %d\n", i);
                             exist = 1;
+                        }
                     if(!exist){
                         NODE* temp = create_node(n);
-                        if(!temp){
-                            perror("Creating node temp Fail!");
-                            exit(1);
-                        }
                         temp->index = v->index;
                         temp->level = v->level+1;
                         memcpy(temp->path, v->path, sizeof(int)*n);   
                         temp->path[temp->index++] = i;    
                         temp->bound = bound(W,n,temp);
-                        if(temp->bound < *minlength)
+                        printf("유망한 자식노드 update\n");
+        printf("level = %d, index = %d, bound = %d\n", temp->level, temp->index, temp->bound);
+        printf("path[ ");
+        for(int m=0; m<temp->index; m++)
+            printf("%d ", temp->path[m]);
+        printf("]\n");
+                        if(temp->bound < *minlength){
+                            printf("insert!\n");
                             insert(heap, n, temp);
+                        }
                         free(temp);
                     }
                 }
             }
         }
+        printf("\n");
     }
+/*
+    for(int i=0; i<4; i++){
+        NODE node;
+        node = root(heap);
+        printf("remove's bound = %d\n", node.bound);
+        printf("node.level = %d, node.index = %d\n", node.level, node.index);
+        printf("node.path[ ");
+        for(int m=0; m<node.index; m++)
+            printf("%d ", node.path[m]);
+        printf("]\n");
+        printf("node.bound = %d, minlength = %d\n", node.bound, *minlength);
+        if(node.bound < *minlength){
+            u->level = node.level+1;
+            //u.bound= v.bound;
+        printf("u->level = %d\n", u->level);
+        }
+    }
+    */
 
     free(heap);
 }
@@ -181,6 +231,13 @@ int main(){
         fscanf(input, "%d", &W[i]);
     int* opttour = (int*)malloc(N*sizeof(int));
     int minlength = Inf;
+    /*
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++)
+            printf("%3d", W[i*N+j]);
+        printf("\n");
+    }
+    */
 
 
     // Algorithm
@@ -190,10 +247,68 @@ int main(){
         printf("%d ", opttour[j]);
     printf("\n");
     printf("minlength = %d\n", minlength);
-    for(int i=0; i<N; i++)
-        fprintf(output, "%d\n", opttour[i]);
-    fprintf(output, "%d", 1);
 
+
+    NODE* n1 = create_node(N);
+    n1->index = 5;
+    n1->path[0] = 1;
+    n1->path[1] = 4;
+    n1->path[2] = 5;
+    n1->path[3] = 2;
+    n1->path[4] = 3;
+    printf("minlength test = %d\n", length(W,N,n1));
+
+    // test bound function -> good
+    /* 
+    NODE node;
+    node.path[0] = 1;
+    node.path[1] = 3;
+    node.index = 2;
+    printf("total bound = %d\n", bound(W,N,&node));
+    */
+    
+
+
+    //test for NODE&HEAP
+    /*
+        printf("\n");
+    HEAP* h1 = create_heap(4);
+    NODE* n1 = create_node(N);
+    NODE* n2 = create_node(N);
+    NODE* n3 = create_node(N);
+    NODE* n4 = create_node(N);
+    n1->bound = 10;
+    n2->bound = 20;
+    n3->bound = 30;
+    n4->bound = 40;
+    n1->path[0] = 1;
+    n2->path[1] = 2;
+    n3->path[2] = 3;
+    n4->path[3] = 4;
+    insert(h1,N, n1);
+    insert(h1,N, n2);
+    insert(h1,N, n3);
+    insert(h1,N, n4);
+    free(n2);
+    free(n1);
+    free(n3);
+    free(n4);
+    
+    //n1->bound = 10;
+    //n1->path[0] = 1;
+    //insert(h1,N, n1);
+    //n1->bound = 20;
+    //n1->path[0] = 2;
+    //insert(h1,N, n1);
+    NODE remove;
+    for(int m=0; m<4; m++){
+        remove = root(h1);
+        printf("remove.bound = %d\n", remove.bound);
+        for(int j=0; j<4; j++)
+            printf("%d ", remove.path[j]);
+        printf("\n");
+    }
+    */
      
     free(W);
     fclose(input);
@@ -248,7 +363,7 @@ void makeheap(HEAP* H, int n){
 NODE root(HEAP* H){
 
     if(H->heapsize == 0){
-        perror("Failed to remove heap-root because heapsize is zero!");
+        perror("Failed to remove heap because heapsize is zero!");
         exit(1);
     }
 
@@ -272,24 +387,33 @@ void heapsort(HEAP* H, int n){
 }
 
 void insert(HEAP* H, int n, NODE* data){
-    if(H->heapsize == H->max_size){     // stack 메모리 꽉 차면 다시 n^5만큼 더 늘려주기
-        H->array = (NODE*)realloc(H->array, sizeof(NODE)*(H->max_size+n*n*n*n*n));  
+    /*
+    if(H->heapsize == H->max_size){
+        H->array = (int*)realloc(H->array, 2*(H->max_size)*sizeof(int));  // 배열 2배로 늘려줌
         if(!(H->array)){
-            perror("Failed to calloc to H->array!"); 
+            perror("Failed to realloc!"); 
             exit(1);
         }
-        H->max_size += n*n*n*n*n;
+        H->max_size = 2*(H->max_size);
     }
+    */
+    
+    printf("-----insert test-----\n");
+
     if(H->heapsize == H->max_size){
-        perror("heapsize realloc 했는데?!");
+        perror("heapsize 꽉차서 더 늘릴수 없음!");
         exit(1);
     }
-
     H->heapsize++;
     int parent = (H->heapsize)/2;
     int i = H->heapsize;
     NODE* new = create_node(n);
     memcpy(new, data, sizeof(NODE));
+
+    printf("new->bound = %d\n", new->bound);
+    for(int j=0; j<n; j++)
+        printf("%d ", new->path[j]);
+    printf("\n");
 
     while( (parent>0) && (H->array[parent].bound > new->bound) ){
         H->array[i] = H->array[parent]; 
@@ -297,6 +421,13 @@ void insert(HEAP* H, int n, NODE* data){
         parent = i/2;
     }
     H->array[i] = *new;     // H->array[] 는 NODE임. pointer 아님!
+
+    printf("H->array[i]->bound = %d\n", H->array[i].bound);
+    for(int j=0; j<n; j++)
+        printf("%d ", H->array[i].path[j]);
+    printf("\n");
+
+    printf("--------------------------\n");
 }
 
 NODE* create_node(int n){
