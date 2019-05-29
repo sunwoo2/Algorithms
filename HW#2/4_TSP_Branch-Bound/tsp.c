@@ -10,11 +10,12 @@
 #define Inf 9000
 // input_*.txt test할려면 90000000으로 바꾸고 돌리자
 
-typedef struct{
+typedef struct{     // VS에서 변수 순서와 밑에 띄어쓰기 저렇게 안해주면 error뜸.
+	int bound;
     int level;
     int* path;  // 1~N
     int index;  // 비어있는 최소 인덱스
-    int bound;
+	
 }NODE;
 
 typedef struct{
